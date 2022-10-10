@@ -44,14 +44,15 @@ class TextExtractor:
                     self.draw.rectangle((left, top, right, bottom), outline='red')
                 cropped_img = self.img.crop((left, top, right, bottom))
                 dom_color = utils.get_dominant_color(cropped_img)
-                text = ' '
                 if dom_color not in constants.special_colors:
                     text = get_text_from_image(cropped_img)
-                row.append(text)
+                    row.append(text)
+                else:
+                    row.append(False)
             result.append(row)
-            print(row)
         if self.debug_board:
             self.img.show()
+        return result
 
     def extract_pieces(self):
         result = []
@@ -71,9 +72,8 @@ class TextExtractor:
             cv2_img = utils.mask_image(cropped_img)
             text = get_text_from_image(cv2_img)
             result.append(text)
-        print(result)
-
         if self.debug_pieces:
             self.img.show()
+        return result
 
 

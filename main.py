@@ -1,5 +1,6 @@
 from ImageProcessor.ImageProcessor import TextExtractor
-from WordFinder.WordFinder import WordFinder
+from WordFinder.WordFinder import launch_playwright
+import asyncio
 
 img = r'tests/screenshot.png'
 # C D '' S T V T
@@ -16,11 +17,14 @@ img_4 = r'tests/s_4.png'
 img_5 = r'tests/s_5.png'
 
 
-if __name__ == '__main__':
+async def main():
     text_extractor = TextExtractor(img_1, False, False)
-    # text_extractor.extract_board()
-    # text_extractor.extract_pieces()
-    word_finder = WordFinder()
-    word_finder.find_word()
+    board_tiles = text_extractor.extract_board()
+    user_tiles = text_extractor.extract_pieces()
+    moves = await launch_playwright(board_tiles, user_tiles)
+    print(moves)
 
+
+if __name__ == '__main__':
+    asyncio.run(main())
 
