@@ -16,6 +16,9 @@ imutils = "^0.5.4"
 requests = "^2.28.1"
 pytest-playwright = "^0.3.0"
 asyncio = "^3.4.3"
+PyAutoGUI = "^0.9.53"
+PyGetWindow = "^0.0.9"
+PyWinCtl = "^0.0.38"
 
 
 [build-system]

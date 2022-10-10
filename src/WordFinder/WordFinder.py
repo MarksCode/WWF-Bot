@@ -24,13 +24,18 @@ async def find_word(context, board_tiles, user_tiles):
     for row in board_tiles:
         for i in range(len(row)):
             letter = row[i]
-            if letter:
+            if letter and letter.strip():
                 await page.keyboard.type(letter)
             elif i != len(row) - 1:
                 await page.keyboard.press('Tab')
         await page.keyboard.press('Tab')
+
     for letter in user_tiles:
-        await page.keyboard.type(letter)
+        if letter:
+            if letter == '?':
+                page.keyboard.type('Space')
+            else:
+                await page.keyboard.type(letter)
 
     async with page.expect_response(r'https://www.scrabulizer.com/solver/results') as response_info:
         await page.click('button.get-solutions')

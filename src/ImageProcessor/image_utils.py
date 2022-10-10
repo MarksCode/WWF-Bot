@@ -26,12 +26,11 @@ def convert_cv2_to_pil(cv2_img):
     return pil_image
 
 
-def get_dominant_color(pil_img):
-    with io.BytesIO() as file_object:
-        pil_img.save(file_object, "PNG")
-        cf = ColorThief(file_object)
-        dom_color = cf.get_color(quality=1)
-        return dom_color
+def get_key_pixel_color(pil_img):
+    width, _ = pil_img.size
+    x = round(width / 2)
+    y = 6
+    return pil_img.getpixel((x, y))
 
 
 def get_palette(pil_img):
@@ -92,26 +91,28 @@ def mask_image(img):
 
 def detect_shape(cv2_img):
     img = erase_number(cv2_img)
-    img = cv2.cvtColor(cv2_img, cv2.COLOR_BGR2GRAY)
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     if not is_light_letter(img):
         img = cv2.bitwise_not(img)
     _, thresh = cv2.threshold(img, 127, 255, 0)
     contours, _ = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    cv2.drawContours(thresh, contours, len(contours) - 1, (0, 255, 0), 3)
     if len(contours) == 0:
         return 'none'
-    for count in contours:
-        epsilon = 0.02 * cv2.arcLength(count, True)
-        approximations = cv2.approxPolyDP(count, epsilon, True)
-        if len(approximations) == 3:
-            return "triangle"
-        elif len(approximations) == 4:
-            return "rectangle"
-        elif len(approximations) == 5:
-            return "pentagon"
-        elif 6 < len(approximations) < 15:
-            return "ellipse"
-        else:
-            return "circle"
+    contour = contours[-1]
+
+    epsilon = 0.03 * cv2.arcLength(contour, True)
+    approximations = cv2.approxPolyDP(contour, epsilon, True)
+    if len(approximations) == 3:
+        return "triangle"
+    elif len(approximations) == 4:
+        return "rectangle"
+    elif len(approximations) == 5:
+        return "pentagon"
+    elif 6 < len(approximations) < 15:
+        return "ellipse"
+    else:
+        return "circle"
 
 
 def detect_if_rectangle(img):
