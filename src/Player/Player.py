@@ -9,6 +9,7 @@ board = consts.board_mac
 pieces = consts.pieces_mac
 app_path = f'/Applications/Words 2.app'
 app_title = 'Words 2'
+app_title_win = 'BlueStacks App Player'
 scale_factor = 2
 
 

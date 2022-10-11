@@ -6,6 +6,14 @@ board_mac = {
     'num_tiles': 15,
 }
 
+osher_board = {
+    'tile_width': 33.6,
+    'spacer': 3,
+    'offset_x': 686,
+    'offset_y': 250,
+    'num_tiles': 15,
+}
+
 pieces_mac = {
     'tile_width': 100,
     'tile_height': 100,
@@ -20,12 +28,16 @@ special_tile_colors = [
     (238, 236, 233),
     # DL
     (98, 164, 215),
+    (73, 166, 220),
     # TL
     (172, 194, 113),
+    (167, 195, 101),
     # DW
     (225, 119, 101),
+    (241, 111, 95),
     # TW
     (240, 158, 104),
+    (254, 153, 93),
 ]
 
 # cv2 in B,G,R

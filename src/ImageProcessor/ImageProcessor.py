@@ -5,8 +5,10 @@ from . import image_utils as utils
 import constants as consts
 import config
 
-path_to_tesseract = r'/opt/homebrew/Cellar/tesseract/5.2.0/bin/tesseract.exe'
-pytesseract.tesseract_cmd = path_to_tesseract
+path_to_tesseract_mac = r'/opt/homebrew/Cellar/tesseract/5.2.0/bin/tesseract.exe'
+path_to_tesseract_win = r'C:\\Users\\osher\\OneDrive\\Desktop\\programming\\Tesseract-OCR\\tesseract.exe'
+pytesseract.tesseract_cmd = path_to_tesseract_win
+pytesseract.pytesseract.tesseract_cmd = path_to_tesseract_win
 tess_config = f'--psm 10 -c tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
 
@@ -22,7 +24,7 @@ def get_text_from_image(pil_img):
 class TextExtractor:
     def __init__(self, image, debug_board=False, debug_pieces=False):
         if isinstance(image, str):
-            image = Image.open(path.join(config.root, image))
+            image = Image.open(image)
         self.img = image.convert('RGB')
         self.debug_board = debug_board
         self.debug_pieces = debug_pieces
@@ -51,6 +53,7 @@ class TextExtractor:
             result.append(row)
         if self.debug_board:
             self.img.show()
+        print(colors)
         return result
 
     def extract_pieces(self):
