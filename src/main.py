@@ -1,11 +1,8 @@
 from ImageProcessor.ImageProcessor import TextExtractor
 from WordFinder.WordFinder import WordFinder
-from Scraper.Scraper import GameScraper, construct_board
+from Scraper.Scraper import GameScraper
 from Player.Player import take_screenshot, play_move
-from Scraper.data import game_data
 import asyncio
-
-img = r'tests/screen_10-12-2022-14-24.png'
 
 
 async def main():
@@ -17,6 +14,7 @@ async def main():
     screenshot = take_screenshot()
     text_extractor = TextExtractor(screenshot, False, False)
     [user_tiles, tile_images] = text_extractor.extract_pieces()
+    print(user_tiles)
     moves = await word_finder.find_moves(user_tiles, board)
     play_move(moves[0], user_tiles, board, tile_images)
 
