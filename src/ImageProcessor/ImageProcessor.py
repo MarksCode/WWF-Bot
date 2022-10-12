@@ -24,14 +24,13 @@ class TextExtractor:
         if isinstance(image, str):
             image = Image.open(path.join(config.root, image))
         self.img = image.convert('RGB')
-        image.show()
         self.debug_board = debug_board
         self.debug_pieces = debug_pieces
         self.draw = ImageDraw.Draw(self.img)
 
     def extract_board(self):
         result = []
-        board = consts.board
+        board = consts.board_mac
 
         for y in range(board['num_tiles']):
             top = y * board['tile_width'] + board['spacer'] * y + board['offset_y']
@@ -42,13 +41,13 @@ class TextExtractor:
                 bottom = top + board['tile_width']
                 if self.debug_board:
                     self.draw.rectangle((left, top, right, bottom), outline='red')
-                cropped_img = self.img.crop((left, top, right, bottom))
-                tile_color = utils.get_key_pixel_color(cropped_img)
-                if tile_color not in consts.special_tile_colors:
-                    text = get_text_from_image(cropped_img)
-                    row.append(text)
-                else:
-                    row.append(' ')
+                # cropped_img = self.img.crop((left, top, right, bottom))
+                # tile_color = utils.get_key_pixel_color(cropped_img)
+                # if tile_color not in consts.special_tile_colors:
+                #     text = get_text_from_image(cropped_img)
+                #     row.append(text)
+                # else:
+                #     row.append(' ')
             result.append(row)
         if self.debug_board:
             self.img.show()
@@ -56,9 +55,10 @@ class TextExtractor:
 
     def extract_pieces(self):
         result = []
-        pieces = consts.pieces
+        tile_images = []
+        pieces = consts.pieces_mac
 
-        for i in range(7):
+        for i in range(pieces['num_tiles']):
             left = pieces['tile_width'] * i + pieces['spacer'] * i + pieces['offset_x']
             top = pieces['offset_y']
             right = left + pieces['tile_width']
@@ -66,6 +66,7 @@ class TextExtractor:
             if self.debug_pieces:
                 self.draw.rectangle((left, top, right, bottom), outline='red')
             cropped_img = self.img.crop((left, top, right, bottom))
+            tile_images.append(cropped_img)
             tile_color = utils.get_key_pixel_color(cropped_img)
             if tile_color == (255, 255, 255):
                 result.append(False)
@@ -77,6 +78,6 @@ class TextExtractor:
                 result.append(text)
         if self.debug_pieces:
             self.img.show()
-        return result
+        return [result, tile_images]
 
 

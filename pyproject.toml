@@ -19,6 +19,7 @@ asyncio = "^3.4.3"
 PyAutoGUI = "^0.9.53"
 PyGetWindow = "^0.0.9"
 PyWinCtl = "^0.0.38"
+json5 = "^0.9.10"
 
 
 [build-system]

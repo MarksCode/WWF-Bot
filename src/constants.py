@@ -1,17 +1,18 @@
-board = {
-    'tile_width': 28,
-    'spacer': 3,
-    'offset_x': 215,
-    'offset_y': 199,
+board_mac = {
+    'tile_width': 54,
+    'spacer': 8,
+    'offset_x': 433,
+    'offset_y': 400,
     'num_tiles': 15,
 }
 
-pieces = {
-    'tile_width': 55,
-    'tile_height': 50,
-    'spacer': 6,
-    'offset_x': 236,
-    'offset_y': 724,
+pieces_mac = {
+    'tile_width': 100,
+    'tile_height': 100,
+    'spacer': 21,
+    'offset_x': 480,
+    'offset_y': 1450,
+    'num_tiles': 7,
 }
 
 special_tile_colors = [
