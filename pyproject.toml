@@ -20,6 +20,7 @@ PyAutoGUI = "^0.9.53"
 PyGetWindow = "^0.0.9"
 PyWinCtl = "^0.0.38"
 json5 = "^0.9.10"
+pynput = "^1.7.6"
 
 
 [build-system]

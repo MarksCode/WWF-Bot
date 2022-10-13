@@ -24,16 +24,13 @@ window_game_2 = '''
 
 
 def construct_board(game_data):
-    print('game_1', type(game_data), game_data)
     data = game_data['data']
-    print('data', type(data), data)
     moves = data['moves']
-    print('moves', type(moves), moves)
     board = [[' ' for _i in range(15)] for _j in range(15)]
     for move in moves:
         words, from_x, from_y, to_x, to_y = move['words'], move['from_x'], move['from_y'], move['to_x'], move[
             'to_y']
-        word, start_x, start_y, end_x, end_y = words[0].upper(), from_x - 1, from_y - 1, to_x - 1, to_y - 1
+        word, start_x, start_y, end_x, end_y = words[0].upper(), from_x, from_y, to_x, to_y
         for i in range(len(word)):
             x = start_x + i if start_x != end_x else start_x
             y = start_y + i if start_y != end_y else start_y
@@ -45,6 +42,7 @@ class GameScraper:
     def __init__(self):
         self.page = None
         self.cleanup_fn = None
+        self.num_moves = 0
 
     async def initialize(self):
         page: Page
@@ -61,4 +59,16 @@ class GameScraper:
         content = await frame.content_frame()
         game = await content.evaluate(window_game)
         game_json = json5.loads(json5.loads(game))
-        return construct_board(game_json)
+        return game_json
+
+    async def get_board(self):
+        game_data = await self.get_game_data()
+        return construct_board(game_data)
+
+    async def check_if_move_played(self):
+        game_data = await self.get_game_data()
+        moves = game_data['data']['moves']
+        if len(moves) > self.num_moves + 1 or self.num_moves == 0:
+            self.num_moves = len(moves)
+            return True
+        return False

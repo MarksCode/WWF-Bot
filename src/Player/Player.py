@@ -19,17 +19,18 @@ def open_app():
     return game_window
 
 
-def take_screenshot():
+def take_screenshot(save_screenshot=False):
     game_window = open_app()
     left, top = game_window.left, game_window.top
     now = datetime.now()
     date_time = now.strftime("%m-%d-%Y-%H-%M")
+    file_name = "src/tests/screen_" + date_time + ".png" if save_screenshot else None
     screenshot = gui.screenshot(region=(
         left * scale_factor,
         top * scale_factor,
         game_window.width * scale_factor,
         game_window.height * scale_factor
-    ), imageFilename="src/tests/screen_" + date_time + ".png")
+    ), imageFilename=file_name)
     return screenshot
 
 
@@ -83,8 +84,8 @@ def play_move(move, user_tiles, board_tiles, tile_images):
     pieces_height = pieces_top + pieces['num_tiles'] * pieces['tile_height']
     pieces_region = (pieces_left, pieces_top, pieces_width, pieces_height)
     [word, coords, vertical, *_] = move
-    start_x = coords[0] + 1
-    start_y = coords[1] + 1
+    start_x = coords[0]
+    start_y = coords[1]
     for i in range(len(word)):
         character = word[i]
         board_x = start_x + i if not vertical else start_x
