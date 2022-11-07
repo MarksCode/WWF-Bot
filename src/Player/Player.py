@@ -90,8 +90,17 @@ class Player:
             system("open \"{}\"".format(app_path_mac))
             sleep(4)
 
-    def move(self):
+    def click_screen(self):
         gui.moveTo(self.centerX, self.top + 570, duration=0.3)
+        sleep(0.5)
+        gui.doubleClick(button="left")
+        sleep(0.5)
+
+    def refresh_lobby(self):
+        gui.moveTo(self.centerX, self.top + 600, duration=0.3)
+        sleep(0.3)
+        gui.click(button="left")
+        gui.dragTo(self.centerX, self.bottom, button="left", duration=0.5)
 
     def check_if_game_loaded(self):
         gui.moveTo(self.left + 10, self.top + 400, duration=0.2)
@@ -127,6 +136,7 @@ class Player:
 
     def open_game(self):
         print('Opening game')
+        self.refresh_lobby()
         gui.moveTo(self.left + 10, self.top + 400, duration=0.2)
         gui.click(button="left")
         gui.moveTo(self.centerX, self.centerY, duration=0.2)
@@ -149,7 +159,10 @@ class Player:
                 return
             except (Exception,):
                 retries += 1
-                gui.scroll(-40)
+                if retries < 6:
+                    gui.scroll(-20)
+                else:
+                    gui.scroll(20)
                 sleep(2)
         self.restart_app(True)
         self.open_game()
@@ -160,7 +173,7 @@ class Player:
         sleep(1)
         self.open_app()
         if sleep_after:
-            sleep(12)
+            sleep(14)
 
     def start_new_game(self):
         print('Starting New Game')
@@ -185,7 +198,8 @@ class Player:
         sleep(1)
         confirm_img = 'images/new_game_confirm.png'
         region = (self.centerX - 320, self.centerY + 250, 600, 200)
-        while True:
+        retries = 0
+        while retries < 3:
             try:
                 x, y = gui.locateCenterOnScreen(
                     confirm_img,
@@ -193,9 +207,18 @@ class Player:
                     region=region
                 )
                 gui.click(x, y, button="left")
-                break
+                return
             except (Exception,):
+                retries += 1
                 sleep(3)
+        self.restart_app(True)
+        return self.start_new_game()
+
+    def exit_game(self):
+        gui.moveTo(self.centerX, self.top + 570, duration=0.3)
+        sleep(0.4)
+        gui.click(button="left")
+        gui.press('Escape', 2, 1.5)
 
     def press_accept_challenge(self):
         confirm_img = 'images/accept_challenge.png'
@@ -234,6 +257,7 @@ class Player:
 
     def press_recall(self):
         gui.moveTo(self.right - 150, self.bottom - 50, duration=0.4)
+        sleep(0.2)
         gui.click()
         sleep(2)
 
@@ -335,8 +359,7 @@ class Player:
         print('Playing move: ', move)
         if move is False:
             self.press_pass_move()
-            return False, 0
-            return False, 0
+            return {'letters_played': 0, 'move': False, 'did_pass': True}
         tiles_copy = self.tiles.copy()
         letters_played = 0
         [word, coords, vertical, *_] = move
@@ -353,8 +376,12 @@ class Player:
             try:
                 piece_index = tiles_copy.index(character)
             except ValueError:
-                piece_index = tiles_copy.index('.')
-                is_blank = True
+                try:
+                    piece_index = tiles_copy.index('.')
+                    is_blank = True
+                except (Exception,):
+                    self.press_recall()
+                    return {'letters_played': 0, 'move': False, 'did_pass': False}
             tile_image = tile_images[piece_index]
             tiles_copy[piece_index] = False
             self.drag_tile_to_board(character, tile_image, board_x, board_y, is_blank)
@@ -377,7 +404,7 @@ class Player:
                 if tile:
                     new_tiles.append(tile)
             self.tiles = new_tiles
-            return move, letters_played
+            return {'letters_played': letters_played, 'move': move, 'did_pass': False}
         except (Exception,):  # Invalid move played, try new move
             print('Error pressing confirm')
             logger.log('Error pressing confirm move button')

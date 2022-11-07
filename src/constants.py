@@ -1,23 +1,25 @@
 import os
 
-player_A = 'mcnutty'
+player_A = 'bubs'
 player_B = 'saul'
 
 player_nums = {player_A: 0, player_B: 1}
 
 profile_imgs = [
     'images/saul_photo.png',
-    'images/mcnutty_photo.png'
+    'images/bubs_photo.png'
 ]
 
 user_ids = {
     'mcnutty': '261715683',
     'saul': '262145972',
+    'gus': '262152875',
+    'bubs': '262208129',
 }
 
 players = [player_A, player_B]
 opponents = [player_B, player_A]
-opponent_user_names = ['saui_goodman', 'mcnuttyy']
+opponent_user_names = ['saui_goodman', 'BubbIesss']
 
 player_user_ids = [user_ids[player_A], user_ids[player_B]]
 

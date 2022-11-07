@@ -204,7 +204,7 @@ class GameScraper:
             user_id = str(last_move['user_id'])
             move_index = last_move['move_index']
             print(f'Current move: {self.move_index}. Last move: {str(move_index)}. User_id: {user_id} ')
-            if move_index > self.move_index:
+            if move_index == 0 or move_index > self.move_index:
                 self.move_index = move_index
                 if user_id == self.user_id_1:
                     return self.player_2
